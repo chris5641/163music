@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <link href="https://cdn.bootcss.com/zui/1.8.1/css/zui.min.css" rel="stylesheet">
+    <link href="/static/css/style.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Title</title>
+    <style>
+        a:link {
+            text-decoration: none;
+        }
+
+        a:visited {
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: none;
+        }
+
+        a:active {
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+<div style="text-align: center;margin-top: 50px">
+    <form id="searchthis" action="/search/" style="display:inline;" method="get">
+        <input id="namanyay-search-box" name="s" size="40" type="text" placeholder="Search"/>
+        <input id="type" name="type" value="song" placeholder="" hidden/>
+        <input id="namanyay-search-btn" value="Go" type="submit"/>
+    </form>
+</div>
+<div class="container-fluid">
+    <div class="row" style="margin-top: 50px">
+        <div class="col-sm-3"></div>
+        <div class="col-sm-6">
+            <ul class="nav nav-tabs">
+                <li {% if type == 'song' %}class="active"{% endif %}><a href="/search/?s={{ data }}&type=song">歌曲</a>
+                </li>
+                <li {% if type == 'album' %}class="active"{% endif %}><a href="/search/?s={{ data }}&type=album">专辑</a>
+                </li>
+                <li {% if type == 'playlist' %}class="active"{% endif %}><a href="/search/?s={{ data }}&type=playlist">歌单</a>
+                </li>
+            </ul>
+
+            <div class="list">
+                <div class="items items-hover">
+                    {% if type == 'song' %}
+
+                        {% for song in result.songs %}
+                            <a href="{{ url_for('player_view') }}?song={{ song.id }}">
+                                <div class="item">
+                                    <div class="item-content">
+                                        <h4 class="list-group-item-heading">{{ song.name }}</h4>
+                                        <p class="list-group-item-text text-muted">
+                                            {% for artist in song.artists[:-1] %}
+                                                {{ artist.name }}&nbsp;/
+                                            {% endfor %}
+                                            {{ song.artists[-1].name }}&nbsp;-&nbsp;{{ song.album.name }}
+                                        </p>
+                                    </div>
+                                </div>
+                            </a>
+                        {% endfor %}
+
+                    {% elif type == 'album' %}
+
+                        {% for album in result.albums %}
+                            <a href="{{ url_for('playlist_view') }}?album={{ album.id }}">
+                                <div class="item">
+                                    <div class="item-content">
+                                        <div class="media pull-left"><img src="{{ album.blurPicUrl }}" width="50"
+                                                                          height="50"></div>
+                                        <h4 class="list-group-item-heading">{{ album.name }}
+                                            - {{ album.artist.name }}</h4>
+                                    </div>
+                                </div>
+                            </a>
+                        {% endfor %}
+
+                    {% elif type == 'playlist' %}
+
+                        {% for playlist in result.playlists %}
+                            <a href="{{ url_for('playlist_view') }}?playlist={{ playlist.id }}">
+                                <div class="item">
+                                    <div class="item-content">
+                                        <div class="media pull-left"><img src="{{ playlist.coverImgUrl }}" width="50"
+                                                                          height="50"></div>
+                                        <h4 class="list-group-item-heading">{{ playlist.name }}
+                                            - {{ playlist.creator.nickname }}</h4>
+                                    </div>
+                                </div>
+                            </a>
+                        {% endfor %}
+
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
