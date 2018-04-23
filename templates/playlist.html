@@ -33,13 +33,9 @@
     listFolded: false,
     listMaxHeight: '400px',
     audio: [
-        {% if playlistView %}
-            {% set songs = playlist.tracks %}
-        {% elif albumView %}
-            {% set songs = playlist.songs %}
-        {% endif %}
-        {% for song in songs %}
 
+        {% if albumView %}
+        {% for song in playlist.songs %}
             {
                 name: '{{ song.name }}',
                 artist: '{% for ar in song.ar[:-1] %}{{ ar.name }} / {% endfor %}{{ song.ar[-1].name }}',
@@ -47,6 +43,16 @@
                 cover: '{{ song.al.picUrl }}'
             },
         {% endfor %}
+        {% elif playlistView %}
+        {% for song in playlist.tracks %}
+            {
+                name: '{{ song.name }}',
+                artist: '{% for artist in song.artists[:-1] %}{{ artist.name }} / {% endfor %}{{ song.artists[-1].name }}',
+                url: 'http://music.163.com/song/media/outer/url?id={{ song.id }}.mp3',
+                cover: '{{ song.album.picUrl }}'
+            },
+        {% endfor %}
+        {% endif %}
     ]
 });
 </script>

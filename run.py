@@ -8,7 +8,7 @@ from func import (
 
 app = Flask(__name__)
 config = dict(
-    debug=True,
+    debug=False,
     host='0.0.0.0',
     port=3000,
 )

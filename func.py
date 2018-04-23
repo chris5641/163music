@@ -60,7 +60,7 @@ def get_playlist_info(playlist_id):
     if r.status_code != 200:
         return False
     try:
-        result = r.json()['playlist']
+        result = r.json()['result']
     except KeyError:
         return False
     return result
